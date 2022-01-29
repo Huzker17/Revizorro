@@ -13,6 +13,6 @@ namespace Revizorro.Models
         public string MainPhoto { get; set; }
         public float PlaceRating { get; set; }
         public IEnumerable<FeedBack> FeedBacks { get; set; }
-        public List<string> Photos { get; set; }
+        
     }
 }

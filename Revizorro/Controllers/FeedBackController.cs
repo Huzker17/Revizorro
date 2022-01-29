@@ -26,14 +26,14 @@ namespace Revizorro.Controllers
             return View();
         }
         [HttpPost]
-        public OkObjectResult AddNew(FeedBack feedBack, Guid PlaceId)
+        public OkObjectResult AddNew(AddFeedBackViewModel model)
         {
-            if(feedBack != null && PlaceId != null)
+            if(model.FeedBack != null && model.Id != null)
             {
-                feedBack.PlaceId = PlaceId;
-                _db.FeedBacks.Add(feedBack);
+                model.FeedBack.PlaceId = model.Id;
+                _db.FeedBacks.Add(model.FeedBack);
                 _db.SaveChanges();
-                return Ok(feedBack);
+                return Ok(model.FeedBack);
             }
             else
             {
@@ -48,7 +48,7 @@ namespace Revizorro.Controllers
             if (model.Id != null && model.formFile != null)
             {
                 var place = _db.Places.FirstOrDefault(x => x.Id == model.Id);
-                    Photo = "/avatars/" + model.formFile.FileName;
+                    Photo = "/photos/" + model.formFile.FileName;
                     newPhoto.Name = model.formFile.FileName;
                     newPhoto.MainPhoto = false;
                     newPhoto.PlaceId = place.Id;
@@ -56,7 +56,7 @@ namespace Revizorro.Controllers
                     {
                         await model.formFile.CopyToAsync(stream);
                     }
-                place.MainPhoto = Photo;
+                newPhoto.PathToPhoto = Photo;
                 _db.Photos.Add(newPhoto);
                 _db.Places.Update(place);
                 _db.SaveChanges();

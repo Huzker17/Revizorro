@@ -105,9 +105,16 @@ namespace Revizorro.Controllers
         {
             if (id != null)
             {
-                var feedbacks = _db.FeedBacks.Where(x => x.PlaceId == id);
+                var feedbacks = _db.FeedBacks.Where(x => x.PlaceId == id).ToList();
                 var place = _db.Places.FirstOrDefault(x => x.Id == id);
-                return View(place);
+                var photos = _db.Photos.Where(x => x.PlaceId == id).ToList();
+                DetailViewModel model = new DetailViewModel()
+                {
+                    Place = place,
+                    FeedBacks = feedbacks,
+                    Photo = photos
+                };
+                return View(model);
             }
             else
             {
