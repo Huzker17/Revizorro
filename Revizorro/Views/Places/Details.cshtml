@@ -18,9 +18,8 @@
             <button type="button" class="btn btn-success" onclick="OpenModal('@Model.Place.Id')">Добавить новое фото</button>
         </div>
         <div class="d-flex justify-content-center">
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#newTournament">Добавить отзыв</button>
+            <button type="button" class="btn btn-success" onclick="OpenComment('@Model.Place.Id')">Добавить отзыв</button>
         </div>
-
     </div>
     @if (Model.FeedBacks != null)
     {
@@ -48,48 +47,46 @@
         </table>
     }
 </div>
-<div class="modal fade" id="newTournament" tabindex="-1" aria-labelledby="newTournamentLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="newTournamentLabel">Добавление отзыва</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form method="post" id="feedBackForm">
-                    <div asp-validation-summary="ModelOnly"></div> <div>
-                        <input type="hidden" id="newPlaceId" value="@Model.Place.Id" />
-                        <div>
-                            <label for="Description"> Описание</label><br />
-                            <input id="Description">
-                        </div>
-                        <span class="text-danger"></span>
-                    </div>
-                    <div>
-                        <select id="filter" class="form-select form-select-lg mb-3">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                        </select>
-                    </div>
-                    <div>
-                        <input type="submit" value="Добавить" data-dismiss="modal" class="mt-2 btn btn-primary" />
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 <script>
-    document.getElementById("feedBackForm").submit(function() {
-        var formData = new FormData(this);
-        console.log(this);
+
+    function OpenComment(id) {
+        Swal.fire({
+            title: 'Добавление нового отзыва',
+            html:
+                '<form method="post">' +
+                '<div asp-validation-summary="ModelOnly"></div> <div>' +
+                '<input type="hidden" id="newPlaceId" value="' + id + '"/>' +
+                '<div><label for="Description"> Описание</label><br />'+
+                '<input id="Description" ></div> ' +
+                '<span class="text-danger"></span></div>' +
+                '<div> <select id="filter" class="form-select form-select-lg mb-3">'+
+                      '  <option value="1">1</option>'+
+                      '  <option value="2">2</option>'+
+                      '  <option value="3">3</option>'+
+                      '  <option value="4">4</option>'+
+                      '  <option value="5">5</option>'+
+                   ' </select>'+
+               ' </div>'+
+                '<div><input type="submit" value="Добавить" data-dismiss="modal" class="mt-2 btn btn-primary" onclick="AddNewFeedBack()"/>' +
+                '</div></form>',
+            showCancelButton: true,
+            showConfirmButton: false
+        });
+    };
+
+
+    function AddNewFeedBack() {
+        let Id = document.getElementById("newPlaceId").value;
+        let FeedBack= {
+            Description: $("#Description").val(),
+            Rate: $("#filter").val(),
+        };
+        var formData = new FormData();
+        formData.append('Id', Id);
+        formData.append('FeedBack', FeedBack);
              $.ajax({
                 url: '@Url.Action("AddNew", "FeedBack")',
                 type: "POST",
@@ -98,7 +95,8 @@
                 data: formData,
                 processData: false
             });
-    });
+
+    };
 
     function OpenModal(id) {
         Swal.fire({
