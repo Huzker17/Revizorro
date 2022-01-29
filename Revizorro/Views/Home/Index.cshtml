@@ -1,7 +1,11 @@
 ﻿<div class="container">
+    @if (User.IsInRole("user"))
+    {
+
     <div class="d-flex justify-content-center">
         <button type="button" class="btn btn-success" onclick="OpenModal()">Добавить новое место</button>
     </div>
+    }
     <div id="cardsMain">
         <div id="cards1" class="card-group"></div>
         <div id="cards2" class="card-group"></div>
